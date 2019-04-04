@@ -4,11 +4,15 @@
 using namespace std;
 
 FILE * openFile(FILE * file);
+void readWords(FILE * file, vector<pair<int,char>> word);
 
 int main() {
+    vector<pair<int,char>> word;
     FILE * file;
   
     file = openFile(file);
+    readWords(file, word);
+
 return 0;
 }
 
@@ -26,3 +30,23 @@ FILE * openFile(FILE * file) {
     return file;
 }
 
+void readWords(FILE * file, vector<pair<int,char>> word) {
+    char aux; 
+    int i = 0;
+    
+    while(fscanf(file,"%c", &aux) != EOF) {
+        if(aux != '\n') {
+            word.push_back(make_pair(i,aux));
+            i++;
+        }
+        else {
+            i = 0;
+        }
+        
+    }
+
+    for(int i = 0; i < word.size(); i++) {
+        cout << word[i].first << ":" << word[i].second << endl; 
+    }
+        
+}
