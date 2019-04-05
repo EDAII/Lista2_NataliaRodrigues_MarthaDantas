@@ -14,7 +14,7 @@ void randomChacarter(vector<pair<int,char>> word);
 void getInit();
 void startProgram();
 void doWhatChildDo();
-vector<pair<int, char>> insertionSort(vector<pair<int, char>>);
+vector<pair<int, char>> insertionSort(vector<pair<int, char>> word);
 void saveOrdenedWord(vector<pair<int, char>> word);
 
 vector<vector<pair<int, char>>> words;
@@ -106,12 +106,20 @@ void doWhatChildDo() {
     }
 }
 
-vector<pair<int, char>> insertionSort(vector<pair<int, char>>) {
-    vector<pair<int, char>> ordened_word;
-
-    /*
-    * CODE HERE
-    */
+vector<pair<int, char>> insertionSort(vector<pair<int, char>> word) {
+    vector<pair<int, char>> ordened_word = word;
+    int i, key, j;
+    
+    for (i = 1; i < ordened_word.size(); i++) { 
+        key = ordened_word[i]; 
+        j = i - 1; 
+  
+        while (j >= 0 && ordened_word[j] > key) { 
+            ordened_word[j+1] = ordened_word[j]; 
+            j--; 
+        } 
+        ordened_word[j+1] = key; 
+    } 
 
     return ordened_word;
 }
