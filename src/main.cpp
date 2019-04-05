@@ -1,21 +1,35 @@
 #include <iostream>
+#include <unistd.h>
 #include <algorithm>
 #include <vector>
+#include <sys/types.h>
+#include <signal.h>
+#include <stdlib.h>
 
 using namespace std;
 
 FILE * openFile(FILE * file);
 void readWords(FILE * file, vector<pair<int,char>> word);
 void randomChacarter(vector<pair<int,char>> word);
+void getInit();
+void startProgram();
+void doWhatChildDo();
+vector<pair<int, char>> insertionSort(vector<pair<int, char>>);
+void saveOrdenedWord(vector<pair<int, char>> word);
+
+vector<vector<pair<int, char>>> words;
+float time_execution;
+int position;
 
 int main() {
-    vector<pair<int,char>> word;
-    FILE * file;
+    // vector<pair<int,char>> word;
+    // FILE * file;
   
-    file = openFile(file);
-    readWords(file, word);
+    // file = openFile(file);
+    // readWords(file, word);
+    getInit();
 
-return 0;
+    return 0;
 }
 
 FILE * openFile(FILE * file) {
@@ -54,7 +68,7 @@ void readWords(FILE * file, vector<pair<int,char>> word) {
     }
 
     cout << "\n\n" << endl;
-      randomChacarter(word);  
+    randomChacarter(word);  
 }
 
 void randomChacarter(vector<pair<int,char>> word) {
@@ -63,3 +77,54 @@ void randomChacarter(vector<pair<int,char>> word) {
         cout << word[i].first << ":" << word[i].second << endl; 
     }
 }
+
+void getInit() {
+    cout << "Enter time for program execution: ";
+    cin >> time_execution;
+
+    cout << "Enter start position for programa execution: ";
+    cin >> position;
+
+    startProgram();
+}
+
+void startProgram() {
+    pid_t child = fork();
+
+    if(child == 0) {
+        doWhatChildDo();
+    }
+    else {
+        sleep(time_execution);
+        kill(child, SIGTERM);
+    }
+}
+
+void doWhatChildDo() {
+    for(int i = position; i < words.size(); i++) {
+        saveOrdenedWord(insertionSort(words[i]));
+    }
+}
+
+vector<pair<int, char>> insertionSort(vector<pair<int, char>>) {
+    vector<pair<int, char>> ordened_word;
+
+    /*
+    * CODE HERE
+    */
+
+    return ordened_word;
+}
+
+void saveOrdenedWord(vector<pair<int, char>> word) {
+    FILE *fp = fopen("ordened_words.txt", "a+");
+
+    fprintf(fp, "*");
+    for(int i = 0; i < word.size(); i++) {
+        fprintf(fp, "%c", word[i].second);
+    }
+    fprintf(fp, "*\n");
+
+    fclose(fp);
+}
+
