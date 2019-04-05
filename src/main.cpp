@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <fstream>
 
 using namespace std;
 
@@ -16,17 +17,23 @@ void startProgram();
 void doWhatChildDo();
 vector<pair<int, char>> insertionSort(vector<pair<int, char>> word);
 void saveOrdenedWord(vector<pair<int, char>> word);
+void finishProgram();
+void writeBegin(FILE *fp);
+void writeMiddle(FILE *fp);
+void writeEnd(FILE *fp);
 
 vector<vector<pair<int, char>>> words;
 float time_execution;
 int position;
 
+int counter = 0;
+
 int main() {
-    // vector<pair<int,char>> word;
-    // FILE * file;
+    vector<pair<int,char>> word;
+    FILE * file;
   
-    // file = openFile(file);
-    // readWords(file, word);
+    file = openFile(file);
+    readWords(file, word);
     getInit();
 
     return 0;
@@ -97,6 +104,7 @@ void startProgram() {
     else {
         sleep(time_execution);
         kill(child, SIGTERM);
+        finishProgram();
     }
 }
 
@@ -108,13 +116,14 @@ void doWhatChildDo() {
 
 vector<pair<int, char>> insertionSort(vector<pair<int, char>> word) {
     vector<pair<int, char>> ordened_word = word;
-    int i, key, j;
+    pair<int, char> key;
+    int i, j;
     
     for (i = 1; i < ordened_word.size(); i++) { 
         key = ordened_word[i]; 
         j = i - 1; 
   
-        while (j >= 0 && ordened_word[j] > key) { 
+        while (j >= 0 && ordened_word[j].first > key.first) { 
             ordened_word[j+1] = ordened_word[j]; 
             j--; 
         } 
@@ -134,5 +143,53 @@ void saveOrdenedWord(vector<pair<int, char>> word) {
     fprintf(fp, "*\n");
 
     fclose(fp);
+}
+
+void finishProgram() {
+    FILE *fp = fopen("new.txt", "a+");
+
+    writeBegin(fp);
+    writeMiddle(fp);
+    writeEnd(fp);
+
+    fclose(fp);
+
+    remove("ordened_words.txt");
+    rename("new.txt", "ordened_words.txt");
+
+    cout << "\n\n" << counter - 1 << " words were ordened!\n\n";
+}
+
+void writeBegin(FILE *fp) {
+    for(int i = 0; i < position; i++) {
+        for(int j = 0; j < words[i].size(); j++) {
+            fprintf(fp, "%c", words[i][j].second);
+        }
+        fprintf(fp, "\n");
+    }
+}
+
+void writeMiddle(FILE *fp) {
+    FILE *wd = fopen("ordened_words.txt", "r");
+    char a;
+
+    while(!feof(wd)) {
+        fscanf(wd, "%c", &a);
+        fprintf(fp, "%c", a);
+
+        if(a == '\n')
+            counter++;
+    }
+
+    fclose(wd);
+}
+
+void writeEnd(FILE *fp) {
+    for(int i = position + counter - 1; i < words.size(); i++) {
+        for(int j = 0; j < words[i].size(); j++){
+            fprintf(fp, "%c", words[i][j].second);
+        }
+        fprintf(fp, "\n");
+    }
 }
 
