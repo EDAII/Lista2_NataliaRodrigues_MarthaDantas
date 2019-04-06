@@ -1,6 +1,6 @@
 # Vamos misturar!?
 
-#### [wiki do Projeto]()
+#### [wiki do Projeto](https://github.com/EDAII/Lista2_NataliaRodrigues_MarthaDantas/wiki/Vamos-Misturar!%3F)
 
 ## Como rodar o projeto
   `` $ cd Lista2_NataliaRodrigues_MarthaDantas``
