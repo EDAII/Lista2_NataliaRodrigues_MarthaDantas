@@ -39,7 +39,7 @@ int main() {
 }
 
 FILE * openFile(FILE * file) {
-    file = fopen("words.txt", "r"); 
+    file = fopen("../doc/words.txt", "r"); 
     
     if(file == NULL) {
         cout << "Error opening File, finishing execution..." << endl;
@@ -131,7 +131,7 @@ vector<pair<int, char>> insertionSort(vector<pair<int, char>> word) {
 }
 
 void saveOrdenedWord(vector<pair<int, char>> word) {
-    FILE *fp = fopen("ordened_words.txt", "a+");
+    FILE *fp = fopen("../doc/ordened_words.txt", "a+");
 
     fprintf(fp, "*");
     for(unsigned int i = 0; i < word.size(); i++) {
@@ -143,7 +143,7 @@ void saveOrdenedWord(vector<pair<int, char>> word) {
 }
 
 void finishProgram() {
-    FILE *fp = fopen("new.txt", "a+");
+    FILE *fp = fopen("../doc/new.txt", "a+");
 
     writeBegin(fp);
     writeMiddle(fp);
@@ -151,8 +151,8 @@ void finishProgram() {
 
     fclose(fp);
 
-    remove("ordened_words.txt");
-    rename("new.txt", "ordened_words.txt");
+    remove("../doc/ordened_words.txt");
+    rename("../doc/new.txt", "../doc/ordened_words.txt");
 
     cout << "\n\n" << counter - 1 << " words were ordened!\n\n";
 }
@@ -167,7 +167,7 @@ void writeBegin(FILE *fp) {
 }
 
 void writeMiddle(FILE *fp) {
-    FILE *wd = fopen("ordened_words.txt", "r");
+    FILE *wd = fopen("../doc/ordened_words.txt", "r");
     char a;
 
     while(!feof(wd)) {
