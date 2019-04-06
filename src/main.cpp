@@ -10,7 +10,7 @@
 using namespace std;
 
 FILE * openFile(FILE * file);
-void readWords(FILE * file, vector<pair<int,char>> word);
+void readWords(FILE * file);
 void randomChacarter(vector<pair<int,char>> word);
 void getInit();
 void startProgram();
@@ -21,19 +21,18 @@ void finishProgram();
 void writeBegin(FILE *fp);
 void writeMiddle(FILE *fp);
 void writeEnd(FILE *fp);
+void savedWords(vector<pair<int,char>> word);
 
-vector<vector<pair<int, char>>> words;
+vector<vector<pair<int, char>>> saved_words;
 float time_execution;
 int position;
-
 int counter = 0;
 
 int main() {
-    vector<pair<int,char>> word;
     FILE * file;
   
     file = openFile(file);
-    readWords(file, word);
+    readWords(file);
     getInit();
 
     return 0;
@@ -53,7 +52,8 @@ FILE * openFile(FILE * file) {
     return file;
 }
 
-void readWords(FILE * file, vector<pair<int,char>> word) {
+void readWords(FILE * file) {
+    vector<pair<int,char>> word;
     char aux; 
     int i = 0;
     
@@ -63,28 +63,24 @@ void readWords(FILE * file, vector<pair<int,char>> word) {
             i++;
         }
         else {
+            randomChacarter(word);
             i = 0;
+            word.erase(word.begin(), word.end());
         }
         
     }
-
+    randomChacarter(word);
     fclose(file);
-
-    for(unsigned int i = 0; i < word.size(); i++) {
-        cout << word[i].first << ":" << word[i].second << endl; 
-    }
-
-    cout << "\n\n" << endl;
-    randomChacarter(word);  
 }
 
 void randomChacarter(vector<pair<int,char>> word) {
     random_shuffle(word.begin(), word.end());
-    for(unsigned int i = 0; i < word.size(); i++) {
-        cout << word[i].first << ":" << word[i].second << endl; 
-    }
+    savedWords(word);
 }
 
+void savedWords(vector<pair<int,char>> word) {
+    saved_words.push_back(word);
+}
 void getInit() {
     cout << "Enter time for program execution: ";
     cin >> time_execution;
@@ -109,15 +105,16 @@ void startProgram() {
 }
 
 void doWhatChildDo() {
-    for(int i = position; i < words.size(); i++) {
-        saveOrdenedWord(insertionSort(words[i]));
+    for(unsigned int i = position; i < saved_words.size(); i++) {
+        saveOrdenedWord(insertionSort(saved_words[i]));
     }
 }
 
 vector<pair<int, char>> insertionSort(vector<pair<int, char>> word) {
     vector<pair<int, char>> ordened_word = word;
     pair<int, char> key;
-    int i, j;
+    unsigned int i;
+    int j;
     
     for (i = 1; i < ordened_word.size(); i++) { 
         key = ordened_word[i]; 
@@ -137,7 +134,7 @@ void saveOrdenedWord(vector<pair<int, char>> word) {
     FILE *fp = fopen("ordened_words.txt", "a+");
 
     fprintf(fp, "*");
-    for(int i = 0; i < word.size(); i++) {
+    for(unsigned int i = 0; i < word.size(); i++) {
         fprintf(fp, "%c", word[i].second);
     }
     fprintf(fp, "*\n");
@@ -162,8 +159,8 @@ void finishProgram() {
 
 void writeBegin(FILE *fp) {
     for(int i = 0; i < position; i++) {
-        for(int j = 0; j < words[i].size(); j++) {
-            fprintf(fp, "%c", words[i][j].second);
+        for(unsigned int j = 0; j < saved_words[i].size(); j++) {
+            fprintf(fp, "%c", saved_words[i][j].second);
         }
         fprintf(fp, "\n");
     }
@@ -185,9 +182,9 @@ void writeMiddle(FILE *fp) {
 }
 
 void writeEnd(FILE *fp) {
-    for(int i = position + counter - 1; i < words.size(); i++) {
-        for(int j = 0; j < words[i].size(); j++){
-            fprintf(fp, "%c", words[i][j].second);
+    for(unsigned int i = position + counter - 1; i < saved_words.size(); i++) {
+        for(unsigned int j = 0; j < saved_words[i].size(); j++){
+            fprintf(fp, "%c", saved_words[i][j].second);
         }
         fprintf(fp, "\n");
     }
